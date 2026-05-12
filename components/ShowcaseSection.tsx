@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Icon } from '@iconify/react';
 import { useTranslation } from '@/context/I18nContext';
 import { useSmoothScroll } from '@/components/SmoothScroll';
+import Image from 'next/image';
 
 export default function ShowcaseSection() {
   const { t } = useTranslation();
@@ -172,10 +173,10 @@ export default function ShowcaseSection() {
 
           <div className="bento-card p-0 group nav-beam relative overflow-hidden z-20 hidden lg:block bg-[#000814]">
             <div className="absolute inset-0 w-full h-full">
-              <img src="/assets/img/zmaj-img/zmaj (1).webp" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-1 transition-all duration-700" alt="Zmaj Photo 1" />
-              <img src="/assets/img/zmaj-img/zmaj (2).webp" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-2 transition-all duration-700" alt="Zmaj Photo 2" />
-              <img src="/assets/img/zmaj-img/zmaj (3).webp" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-3 transition-all duration-700" alt="Zmaj Photo 3" />
-              <img src="/assets/img/zmaj-img/zmaj (4).webp" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-4 transition-all duration-700" alt="Zmaj Photo 4" />
+              <Image src="/assets/img/zmaj-img/zmaj (1).webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-1 transition-all duration-700" style={{ objectFit: 'cover' }} alt="Zmaj Photo 1" />
+              <Image src="/assets/img/zmaj-img/zmaj (2).webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-2 transition-all duration-700" style={{ objectFit: 'cover' }} alt="Zmaj Photo 2" />
+              <Image src="/assets/img/zmaj-img/zmaj (3).webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-3 transition-all duration-700" style={{ objectFit: 'cover' }} alt="Zmaj Photo 3" />
+              <Image src="/assets/img/zmaj-img/zmaj (4).webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-4 transition-all duration-700" style={{ objectFit: 'cover' }} alt="Zmaj Photo 4" />
             </div>
           </div>
         </div>
@@ -250,10 +251,13 @@ export default function ShowcaseSection() {
           </div>
 
           <div className="bento-card p-0 group nav-beam relative overflow-hidden z-20 hidden lg:block bg-[#000814]">
-            <img
+            <Image
               ref={canetaImgRef}
               src="/assets/img/caneta-img/frame_0001.webp"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+              style={{ objectFit: 'cover' }}
               alt="Pen Sequence 3D"
             />
           </div>
@@ -330,10 +334,10 @@ export default function ShowcaseSection() {
 
           <div className="bento-card p-0 group nav-beam relative overflow-hidden z-20 hidden lg:block bg-[#000814]">
             <div className="absolute inset-0 w-full h-full">
-              <img src="/assets/img/design-img/design (1).webp" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-1 transition-all duration-700" alt="Aura Photo 1" />
-              <img src="/assets/img/design-img/design (2).webp" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-2 transition-all duration-700" alt="Aura Photo 2" />
-              <img src="/assets/img/design-img/design (3).webp" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-3 transition-all duration-700" alt="Aura Photo 3" />
-              <img src="/assets/img/design-img/design (4).webp" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-4 transition-all duration-700" alt="Aura Photo 4" />
+              <Image src="/assets/img/design-img/design (1).webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-1 transition-all duration-700" style={{ objectFit: 'cover' }} alt="Aura Photo 1" />
+              <Image src="/assets/img/design-img/design (2).webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-2 transition-all duration-700" style={{ objectFit: 'cover' }} alt="Aura Photo 2" />
+              <Image src="/assets/img/design-img/design (3).webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-3 transition-all duration-700" style={{ objectFit: 'cover' }} alt="Aura Photo 3" />
+              <Image src="/assets/img/design-img/design (4).webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="absolute inset-0 w-full h-full object-cover opacity-0 animate-crossfade-4 transition-all duration-700" style={{ objectFit: 'cover' }} alt="Aura Photo 4" />
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ export default function ScrollGuide() {
 
                     // 1. ESTILO VISUAL DA BARRA (Sempre a preencher)
                     if (dotRef.current) {
-                        gsap.set(dotRef.current, { height: `${progress * 100}%` });
+                        gsap.set(dotRef.current, { scaleY: progress });
                     }
 
                     // 2. LÓGICA DE DIREÇÃO ORIGINAL
@@ -117,8 +117,8 @@ export default function ScrollGuide() {
             <div className="w-px h-16 bg-white/10 relative overflow-hidden rounded-full">
                 <div
                     ref={dotRef}
-                    className="absolute top-0 left-0 w-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)] group-hover:bg-white group-hover:shadow-[0_0_15px_rgba(255,255,255,0.8)] transition-all duration-300"
-                    style={{ height: "0%" }}
+                    className="absolute top-0 left-0 w-full h-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)] group-hover:bg-white group-hover:shadow-[0_0_15px_rgba(255,255,255,0.8)] transition-all duration-300 origin-top"
+                    style={{ transform: "scaleY(0)" }}
                 ></div>
             </div>
 
