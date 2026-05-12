@@ -24,6 +24,7 @@ export default function HeroSection() {
       const introTl = gsap.timeline();
       introTl
         .from('.hero-text', { duration: 1.2, stagger: 0.2, ease: "expo.out", delay: 0.5 })
+        .to('#orbitals-container', { opacity: 1, duration: 0.2, ease: "power1.out" }, 0.2)
         .from('.hero-fade', { duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.8");
 
       // 2. Órbitas Orgânicas (Flutuação Recursiva Fluida)
@@ -199,12 +200,14 @@ export default function HeroSection() {
         />
 
         {/* Constelação Tecnológica Oficial (Coordenadas Manuais Preservadas) */}
-        <div id="orbitals-container" className="hero-fade absolute inset-0 z-30 pointer-events-none w-full h-full">
+        <div id="orbitals-container" className="absolute inset-0 z-30 pointer-events-none w-full h-full opacity-0">
 
           {/* React.js (Substitui Antigravity) */}
           <div className="orbital-icon absolute z-50 top-[35%] right-[62%] pointer-events-none opacity-80">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-[#61DAFB]/20 group-hover:shadow-[0_0_40px_rgba(97,218,251,0.6)]">
-              <Icon icon="logos:react" className="w-8 h-8 text-[32px] flex items-center justify-center" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="logos:react" className="w-full h-full text-[32px]" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">React.js</span>
               </div>
@@ -214,7 +217,9 @@ export default function HeroSection() {
           {/* TypeScript (Substitui Cursor AI) */}
           <div className="orbital-icon absolute z-50 top-[32%] right-[35%] pointer-events-none opacity-80">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-[#3178C6]/20 group-hover:shadow-[0_0_40px_rgba(49,120,198,0.6)]">
-              <Icon icon="logos:typescript-icon" className="w-8 h-8 text-[32px] flex items-center justify-center" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="logos:typescript-icon" className="w-full h-full text-[32px]" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">TypeScript</span>
               </div>
@@ -224,7 +229,9 @@ export default function HeroSection() {
           {/* Python (Substitui Logic_JS) */}
           <div className="orbital-icon absolute z-40 bottom-[32%] right-[59%] pointer-events-none opacity-80">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-[#FFE873]/20 group-hover:shadow-[0_0_40px_rgba(255,232,115,0.4)]">
-              <Icon icon="logos:python" className="w-8 h-8 text-[32px] flex items-center justify-center" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="logos:python" className="w-full h-full text-[32px]" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">Python</span>
               </div>
@@ -234,7 +241,9 @@ export default function HeroSection() {
           {/* Gemini AI (Mantido) */}
           <div className="orbital-icon absolute z-30 top-[15%] right-[69%] pointer-events-none opacity-60">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-cyan-400/30 group-hover:shadow-[0_0_40px_rgba(34,211,238,0.8)]">
-              <Icon icon="logos:google-bard-icon" className="w-8 h-8 text-[32px] flex items-center justify-center" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="logos:google-bard-icon" className="w-full h-full text-[32px]" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">Gemini_AI</span>
               </div>
@@ -244,7 +253,9 @@ export default function HeroSection() {
           {/* Next.js (Substitui Lógica_IA) */}
           <div className="orbital-icon absolute z-40 top-[12%] right-[35%] pointer-events-none opacity-60">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-white/20 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.4)]">
-              <Icon icon="simple-icons:nextdotjs" className="w-8 h-8 text-[32px] flex items-center justify-center text-white opacity-80 group-hover:opacity-100" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="simple-icons:nextdotjs" className="w-full h-full text-[32px] text-white opacity-80 group-hover:opacity-100" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">Next.js</span>
               </div>
@@ -254,7 +265,9 @@ export default function HeroSection() {
           {/* Tailwind CSS (Atualizado com logo oficial) */}
           <div className="orbital-icon absolute z-30 bottom-[20%] right-[75%] pointer-events-none opacity-60">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-[#38B2AC]/20 group-hover:shadow-[0_0_40px_rgba(56,178,172,0.6)]">
-              <Icon icon="logos:tailwindcss-icon" className="w-8 h-8 text-[32px] flex items-center justify-center" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="logos:tailwindcss-icon" className="w-full h-full text-[32px]" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">Tailwind</span>
               </div>
@@ -264,7 +277,9 @@ export default function HeroSection() {
           {/* GSAP (Mantido com a sua cor verde) */}
           <div className="orbital-icon absolute z-30 top-[45%] right-[40%] pointer-events-none opacity-60">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-[#88ce02]/20 group-hover:shadow-[0_0_40px_rgba(136,206,2,0.5)]">
-              <Icon icon="simple-icons:greensock" className="w-8 h-8 text-[32px] flex items-center justify-center text-[#88ce02] opacity-80 group-hover:opacity-100" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="simple-icons:greensock" className="w-full h-full text-[32px] text-[#88ce02] opacity-80 group-hover:opacity-100" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">GSAP</span>
               </div>
@@ -274,7 +289,9 @@ export default function HeroSection() {
           {/* Django (Substitui HTML5) */}
           <div className="orbital-icon absolute z-40 bottom-[30%] right-[30%] pointer-events-none opacity-60">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-[#092E20]/50 group-hover:shadow-[0_0_40px_rgba(9,46,32,0.8)]">
-              <Icon icon="logos:django-icon" className="w-8 h-8 text-[32px] flex items-center justify-center" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="logos:django-icon" className="w-full h-full text-[32px]" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">Django</span>
               </div>
@@ -284,7 +301,9 @@ export default function HeroSection() {
           {/* Framer Motion (Substitui CSS3 na left-[20%]) */}
           <div className="orbital-icon absolute z-30 top-[45%] left-[20%] pointer-events-none opacity-60">
             <div className="group relative w-14 h-14 flex items-center justify-center glass-panel orbital-icon-active backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl hover:scale-110 cursor-pointer pointer-events-auto transition-all duration-300 group-hover:bg-white/20 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.4)]">
-              <Icon icon="logos:framer" className="w-8 h-8 text-[32px] flex items-center justify-center" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Icon icon="logos:framer" className="w-full h-full text-[32px]" />
+              </div>
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <span className="text-white font-mono text-[8px] tracking-[0.3em] uppercase whitespace-nowrap">Framer</span>
               </div>

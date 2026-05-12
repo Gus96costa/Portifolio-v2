@@ -139,8 +139,17 @@ export default function Footer() {
                         {/* Foto Identity */}
                         <div className="relative group order-2 lg:order-1">
                             <div className="absolute -inset-4 bg-accent/10 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                            <div className="identity-photo-frame relative z-10 overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
-                                <Image src="/assets/img/gus-foto.webp" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="w-full h-[450px] object-cover object-top transform hover:scale-105 transition-transform duration-1000" style={{ objectFit: 'cover' }} alt={t('alt_footer_img')} />
+                            <div className="identity-photo-frame relative z-10 overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl w-full h-[450px]">
+                                <Image 
+                                    src="/assets/img/gus-foto.webp" 
+                                    fill 
+                                    priority 
+                                    unoptimized 
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" 
+                                    className="object-cover object-top transform hover:scale-105 transition-transform duration-1000 opacity-100" 
+                                    style={{ objectFit: 'cover' }} 
+                                    alt={t('alt_footer_img')} 
+                                />
                                 <div className="absolute bottom-4 left-4 font-mono text-[9px] tracking-[0.3em] text-white/40 uppercase">
                                     System_Architect_Id: 0814-26
                                 </div>
