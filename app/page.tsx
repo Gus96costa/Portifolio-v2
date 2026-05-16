@@ -8,7 +8,6 @@ export default function Home() {
   return (
     <main className="relative w-full">
       <HeroSection />
-      <div id="work-anchor" className="relative"></div>
       <ShowcaseSection />
       <TimelineSection />
       <ExpertiseSection />

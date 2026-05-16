@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import { Icon } from '@iconify/react';
 import { useTranslation } from '@/context/I18nContext';
@@ -15,62 +15,99 @@ if (typeof window !== "undefined") {
 export default function HeroSection() {
   const container = useRef<HTMLElement>(null);
   const { t } = useTranslation();
-  const [isClient, setIsClient] = useState(false);
-
-  // Única alteração técnica: Garantir montagem para o Iconify
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   useGSAP(() => {
-    if (!isClient || !container.current) return;
+    // CORREÇÃO CRÍTICA: Inicializa imediatamente no client-side para garantir
+    // que a Hero registre seu pinSpacing ANTES do Showcase calcular suas posições.
+    if (typeof window === "undefined" || !container.current) return;
 
     let mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      // 1. Intro Timeline Original
+
+      // 1. INTRO TIMELINE (Entrada - Réplica exata com fromTo para evitar flashes)
       const introTl = gsap.timeline();
       introTl
-        .from('.hero-text', { duration: 1.2, stagger: 0.2, ease: "expo.out", delay: 0.5 })
-        .from('.hero-fade', { duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.8");
+        .fromTo('.hero-text',
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "expo.out", delay: 0.5 }
+        )
+        .fromTo('.hero-fade',
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "power3.out" },
+          "-=0.8"
+        );
 
-      // 2. Órbitas Orgânicas Originais
-      gsap.utils.toArray('.orbital-icon').forEach((orb) => {
-        const element = orb as HTMLElement;
-        const smoothFloat = () => {
-          gsap.to(element, {
-            x: "random(-25, 25)",
-            y: "random(-25, 25)",
-            rotation: "random(-8, 8)",
-            duration: "random(5, 9)",
-            ease: "sine.inOut",
-            onComplete: smoothFloat
-          });
-        };
-        smoothFloat();
-      });
-
-      // 3. Scroll Parallax com Chuva de Luzes
-      gsap.timeline({
+      // 2. MOTOR DE TRANSIÇÃO (Extraído milimetricamente do main.js)
+      const heroScrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: container.current,
           start: "top top",
-          end: "+=80%",
-          scrub: 0.1,
+          end: "+=150%", // Duração exata do site original
+          scrub: 0.1, // Scrub ultra-sensível
           pin: true,
           pinSpacing: true,
+          anticipatePin: 1,
+          fastScrollEnd: true,
+          invalidateOnRefresh: true
         }
-      })
-        .to(".bg-grain", { y: 60, ease: "none" }, 0)
-        .to("#beam-container", { y: -24, ease: "none" }, 0)
-        .to(".hero-vignette", { opacity: 0.8, ease: "none" }, 0)
-        .to(["#persona-sticker", "#orbitals-container"], {
-          y: -150, opacity: 0, scale: 0.9, ease: "power2.in"
-        }, 0.1);
+      });
+
+      // ZONA MORTA REDUZIDA (The Sweet Spot original)
+      heroScrollTl.to({}, { duration: 0.5 });
+
+      // Atmosfera e Fundo (Parallax Infinito)
+      heroScrollTl.to(".bg-grain", { y: 60, ease: "none" }, 0);
+      heroScrollTl.to("#beam-container", { y: -24, ease: "none" }, 0);
+      heroScrollTl.to(".hero-vignette", { opacity: 0.8, ease: "none" }, 0);
+
+      // Persona & Container de Ícones (Saída Unificada para cima)
+      heroScrollTl.to(["#persona-sticker", "#orbitals-container"], {
+        y: -150,
+        opacity: 0,
+        scale: 0.9,
+        ease: "power2.in",
+        stagger: 0,
+        immediateRender: false,
+        overwrite: "auto"
+      }, 0.2);
+
+      // Conteúdo Principal (Textos sobem em paralelo)
+      heroScrollTl.fromTo("#hero-content-column",
+        { y: 0, opacity: 1 },
+        {
+          y: -100,
+          opacity: 0,
+          ease: "power2.in",
+          immediateRender: false
+        }, 0.3);
+
+      // Suavização de Saída (Luzes e Backgrounds somem suavemente)
+      heroScrollTl.fromTo([".lense-diffusion", "#beam-container", ".hero-vignette", ".bg-grain"],
+        { opacity: 1, scale: 1 },
+        {
+          opacity: 0,
+          scale: 0.95,
+          pointerEvents: "none",
+          duration: 0.4,
+          ease: "power2.inOut",
+          immediateRender: false
+        }, 0.6);
+
+      // Iluminação Sóbria
+      heroScrollTl.to("#persona-backglow", {
+        scale: 1.3,
+        opacity: 0.3,
+        backgroundColor: "#0673d8",
+        duration: 1,
+        ease: "power2.inOut"
+      }, 0);
     });
-  }, { scope: container, dependencies: [isClient] });
+
+    return () => mm.revert();
+  }, { scope: container }); // Removido o delay do array de dependências para forçar fluxo sequencial natural
 
   return (
-    <section id="hero" ref={container} className="hero-split min-h-screen w-full relative overflow-hidden flex items-center pt-35 pb-2 bg-[#000814] z-10">
+    <section id="hero" ref={container} className="hero-split min-h-screen w-full relative overflow-hidden flex items-center pt-32 pb-20 bg-[#000814] z-10">
 
       {/* Chuva de Luzes e Background Original */}
       <div className="absolute inset-0 z-0 pointer-events-none" id="beam-container">
@@ -111,7 +148,7 @@ export default function HeroSection() {
                 dangerouslySetInnerHTML={{ __html: t('hero_desc') }} />
             </div>
 
-            {/* BOTÃO RESTAURADO: Tamanho e estilo originais */}
+            {/* Botão original */}
             <button id="magnetic-btn-hero" className="hero-fade glass-btn nav-beam w-fit px-6 py-3 rounded-full flex items-center gap-3 border border-white/10 text-white font-bold uppercase tracking-[0.2em] text-[10px] transition-all hover:scale-105">
               <span className="relative z-10">{t('hero_cta')}</span>
               <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
@@ -122,12 +159,12 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* FOTO E DISPOSIÇÃO DE ÍCONES ORIGINAIS */}
+      {/* Foto e Disposição Orbital Original */}
       <div className="absolute bottom-0 right-[-10%] md:right-[-15%] w-full md:w-[75vw] h-[60vh] md:h-[95vh] flex justify-end items-end pointer-events-none z-30">
         <Image
           id="persona-sticker"
           src="/assets/img/foto-perfil.webp"
-          alt={t('alt_hero_img')}
+          alt={t('alt_persona')}
           width={1000}
           height={1200}
           priority
@@ -135,27 +172,25 @@ export default function HeroSection() {
           style={{ filter: 'contrast(1.1) brightness(1.08)' }}
         />
 
-        {isClient && (
-          <div id="orbitals-container" className="absolute inset-0 z-30">
-            {[
-              { id: 'react', icon: 'logos:react', pos: 'top-[35%] right-[62%]' },
-              { id: 'ts', icon: 'logos:typescript-icon', pos: 'top-[32%] right-[35%]' },
-              { id: 'python', icon: 'logos:python', pos: 'bottom-[32%] right-[59%]' },
-              { id: 'gemini', icon: 'logos:google-bard-icon', pos: 'top-[15%] right-[69%]' },
-              { id: 'next', icon: 'simple-icons:nextdotjs', pos: 'top-[12%] right-[35%]', color: 'text-white' },
-              { id: 'tailwind', icon: 'logos:tailwindcss-icon', pos: 'bottom-[20%] right-[75%]' },
-              { id: 'gsap', icon: 'simple-icons:greensock', pos: 'top-[45%] right-[40%]', color: 'text-[#88ce02]' },
-              { id: 'django', icon: 'logos:django-icon', pos: 'bottom-[30%] right-[30%]' },
-              { id: 'framer', icon: 'logos:framer', pos: 'top-[45%] left-[20%]' }
-            ].map((item) => (
-              <div key={item.id} className={`orbital-icon absolute z-50 ${item.pos} opacity-80`}>
-                <div className="group relative w-14 h-14 flex items-center justify-center glass-panel backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl pointer-events-auto transition-all duration-300 hover:border-cyan-400/50">
-                  <Icon icon={item.icon} className={`w-8 h-8 ${item.color || ''}`} />
-                </div>
+        <div id="orbitals-container" className="absolute inset-0 z-30">
+          {[
+            { id: 'react', icon: 'logos:react', pos: 'top-[35%] right-[62%]' },
+            { id: 'ts', icon: 'logos:typescript-icon', pos: 'top-[32%] right-[35%]' },
+            { id: 'python', icon: 'logos:python', pos: 'bottom-[32%] right-[59%]' },
+            { id: 'gemini', icon: 'logos:google-bard-icon', pos: 'top-[15%] right-[69%]' },
+            { id: 'next', icon: 'simple-icons:nextdotjs', pos: 'top-[12%] right-[35%]', color: 'text-white' },
+            { id: 'tailwind', icon: 'logos:tailwindcss-icon', pos: 'bottom-[20%] right-[75%]' },
+            { id: 'gsap', icon: 'simple-icons:greensock', pos: 'top-[45%] right-[40%]', color: 'text-[#88ce02]' },
+            { id: 'django', icon: 'logos:django-icon', pos: 'bottom-[30%] right-[30%]' },
+            { id: 'framer', icon: 'logos:framer', pos: 'top-[45%] left-[20%]' }
+          ].map((item) => (
+            <div key={item.id} className={`orbital-icon absolute z-50 ${item.pos} opacity-80`}>
+              <div className="group relative w-14 h-14 flex items-center justify-center glass-panel backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl pointer-events-auto transition-all duration-300 hover:border-cyan-400/50">
+                <Icon icon={item.icon} className={`w-8 h-8 ${item.color || ''}`} />
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="absolute bottom-12 left-12 flex items-center gap-6 opacity-50 z-10">

@@ -8,242 +8,149 @@ import { useTranslation } from '@/context/I18nContext';
 
 export default function TimelineSection() {
     const sectionRef = useRef<HTMLElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const timelineWrapperRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
     useGSAP(() => {
         if (typeof window !== "undefined") {
             gsap.registerPlugin(ScrollTrigger);
 
-            // 1. TIMELINE DE ENTRADA E SAÍDA DA SEÇÃO
-            const sectionTl = gsap.timeline({
+            // 1. O FIO CONDUTOR (A Barra de Progresso Central)
+            // Extraída exatamente do seu comportamento original
+            gsap.to("#timeline-progress", {
+                height: '100%',
+                ease: "none",
                 scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 85%",
-                    end: "bottom 15%",
-                    toggleActions: "play reverse play reverse",
+                    trigger: ".timeline-container",
+                    start: "top 50%", // Começa a descer quando atinge o meio
+                    end: "bottom 50%",
                     scrub: 1
                 }
             });
 
-            sectionTl.fromTo(containerRef.current,
-                { autoAlpha: 0, y: 50 },
-                { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" }
-            )
-                .to(containerRef.current,
-                    { autoAlpha: 0, y: -50, duration: 1, ease: "power2.in" },
-                    "+=2"
-                );
+            // 2. MOTOR DE ILUMINAÇÃO (O Radar de Interseção)
+            const items = gsap.utils.toArray('.timeline-item', sectionRef.current);
+            const accentColor = "#22d3ee"; // O cyan-400 do Vibe Design
 
-            // 2. LINHA DE PROGRESSO (Ancorada e Fluida)
-            gsap.to(".timeline-progress", {
-                height: '100%',
-                ease: "none",
-                scrollTrigger: {
-                    trigger: timelineWrapperRef.current,
-                    start: "top 50%",
-                    end: "bottom 50%",
-                    scrub: 0.1
-                }
-            });
-
-            // 3. Spotlight dos Itens (Sem conflito de Transform)
-            gsap.utils.toArray('.timeline-item').forEach((item) => {
-                const element = item as HTMLElement;
-                const dot = element.querySelector('.timeline-dot');
-                const year = element.querySelector('.timeline-year');
-                const glowBg = element.querySelector('.timeline-glow-bg');
+            items.forEach((item: any) => {
+                const dot = item.querySelector('.timeline-dot');
+                const year = item.querySelector('.timeline-year');
+                const title = item.querySelector('.timeline-title');
+                const desc = item.querySelector('.timeline-desc');
+                const glowBg = item.querySelector('.timeline-glow-bg');
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: element,
-                        start: "top 60%",
+                        trigger: item,
+                        start: "top 60%", // A "lente" no meio do ecrã
                         end: "bottom 40%",
-                        toggleActions: "play reverse play reverse",
+                        toggleActions: "play reverse play reverse", // Acende e apaga perfeitamente ao subir/descer
                     }
                 });
 
-                tl.to(dot, { backgroundColor: "#3b82f6", scale: 1.4, boxShadow: "0 0 25px #3b82f6", borderRadius: "50%", duration: 0.4 }, 0)
-                    .to(year, { opacity: 1, color: "#3b82f6", textShadow: "0 0 40px rgba(59, 130, 246, 0.6)", scale: 1.05, duration: 0.4 }, 0)
-                    .to(glowBg, { opacity: 1, duration: 0.6 }, 0)
-                    .to(element.querySelector('h3'), { color: "#fff", duration: 0.4 }, 0)
-                    .to(element.querySelector('p'), { color: "#f3f4f6", duration: 0.4 }, 0);
+                // GSAP ASSUME O CONTROLO: Sem transições CSS interferindo
+                tl.to(dot, {
+                    backgroundColor: accentColor,
+                    scale: 1.5,
+                    boxShadow: `0 0 20px ${accentColor}`,
+                    borderColor: "#000814",
+                    duration: 0.4,
+                    ease: "power2.out"
+                }, 0)
+                    .to(year, {
+                        opacity: 1,
+                        color: accentColor,
+                        textShadow: `0 0 30px rgba(34, 211, 238, 0.4)`,
+                        scale: 1.05,
+                        duration: 0.4,
+                        ease: "power2.out"
+                    }, 0)
+                    .to(glowBg, {
+                        opacity: 1,
+                        duration: 0.6,
+                        ease: "power2.out"
+                    }, 0)
+                    .to(title, {
+                        color: "#ffffff",
+                        textShadow: "0 0 15px rgba(255, 255, 255, 0.3)",
+                        duration: 0.4
+                    }, 0)
+                    .to(desc, {
+                        color: "#f3f4f6", // Texto acende para um cinza muito claro
+                        duration: 0.4
+                    }, 0);
             });
         }
     }, { scope: sectionRef });
 
+    const timelineData = [
+        { year: "2018/21", tag: "time1_tag", title: "time1_title", desc: "time1_desc", side: "left" },
+        { year: "2022/23", tag: "time2_tag", title: "time2_title", desc: "time2_desc", side: "right" },
+        { year: "2024/25", tag: "time3_tag", title: "time3_title", desc: "time3_desc", side: "left" },
+        { year: "2025", tag: "time4_tag", title: "time4_title", desc: "time4_desc", side: "right" },
+        { year: "2026", tag: "time5_tag", title: "time5_title", desc: "time5_desc", side: "left" },
+    ];
+
     return (
         <section id="timeline" ref={sectionRef} className="py-24 md:py-48 relative px-6 bg-[#000814] z-20">
-            <div ref={containerRef} className="container mx-auto">
+            <div className="container mx-auto">
 
-                {/* Cabeçalho */}
+                {/* Header da Timeline */}
                 <div className="text-center mb-32">
-                    <h2
-                        className="text-4xl md:text-7xl font-black title-monolithic uppercase mb-8"
-                        dangerouslySetInnerHTML={{ __html: t('journey_title') }}
-                    />
+                    <h2 className="text-4xl md:text-7xl font-black title-monolithic uppercase mb-8">
+                        {t('journey_title')}
+                    </h2>
                     <p className="text-neutral-600 font-mono text-[10px] tracking-[0.6em] uppercase">
-                        {t('timeline_sub')}
+                        CHRONOLOGICAL PROGRESSION // 2018 - 2026
                     </p>
                 </div>
 
-                <div ref={timelineWrapperRef} className="relative max-w-5xl mx-auto py-20">
+                <div className="timeline-container relative max-w-5xl mx-auto py-20">
 
-                    <div className="timeline-line"></div>
-                    <div className="timeline-progress opacity-80" id="timeline-progress"></div>
+                    {/* A Estrutura Central (O Fio) */}
+                    <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-white/10 -translate-x-1/2"></div>
+                    <div id="timeline-progress" className="absolute left-1/2 top-0 w-[2px] bg-cyan-400 -translate-x-1/2 shadow-[0_0_20px_#22d3ee] h-0"></div>
 
-                    {/* ======================= ITEM 1: 2018/21 ======================= */}
-                    <div className="relative flex flex-col md:flex-row justify-between items-center mb-48 timeline-item z-10">
-                        <div className="w-full md:w-[45%] md:text-right perspective-container mb-12 md:mb-0">
-                            <div className="rotate-3d-system relative timeline-content">
-                                <div className="absolute -inset-8 md:-inset-12 bg-accent/5 blur-2xl rounded-[3rem] opacity-0 timeline-glow-bg pointer-events-none transition-opacity"></div>
-                                <div className="relative z-10">
-                                    <span className="text-neutral-700 font-mono text-xs tracking-widest block mb-4">
-                                        {t('time1_tag')}
-                                    </span>
-                                    <h3 className="text-3xl md:text-4xl font-bold font-sans uppercase mb-6 text-neutral-500 transition-colors">
-                                        {t('time1_title')}
-                                    </h3>
-                                    <p className="text-neutral-600 font-light text-lg leading-relaxed transition-colors">
-                                        {t('time1_desc')}
-                                    </p>
+                    {timelineData.map((item, index) => (
+                        <div key={index} className={`relative flex flex-col md:flex-row items-center gap-12 md:gap-20 mb-32 timeline-item ${item.side === 'right' ? 'md:flex-row-reverse' : ''}`}>
+
+                            {/* Bloco de Texto (Direita ou Esquerda) */}
+                            <div className={`w-full md:w-1/2 ${item.side === 'left' ? 'md:text-right' : 'md:text-left'}`}>
+                                <div className="relative">
+                                    {/* A Aura de Fundo Original (Oculta por padrão) */}
+                                    <div className="absolute -inset-10 bg-cyan-500/5 blur-[40px] rounded-full opacity-0 timeline-glow-bg pointer-events-none"></div>
+
+                                    <div className="relative z-10">
+                                        <span className="text-neutral-700 font-mono text-[10px] tracking-widest block mb-4 uppercase font-bold">
+                                            {t(item.tag)}
+                                        </span>
+                                        {/* REMOVI O transition-colors PARA O GSAP COMANDAR */}
+                                        <h3 className="timeline-title text-3xl md:text-4xl font-bold font-jakarta uppercase mb-6 text-neutral-600">
+                                            {t(item.title)}
+                                        </h3>
+                                        {/* REMOVI O transition-colors PARA O GSAP COMANDAR */}
+                                        <p className="timeline-desc text-neutral-600 font-light text-base md:text-lg leading-relaxed max-w-md ml-auto mr-auto md:ml-0 md:mr-0">
+                                            {t(item.desc)}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* FIX: Container trata do posicionamento / Ponto trata da animação */}
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-6 h-6 flex items-center justify-center">
-                            <div className="w-full h-full bg-white/20 rounded-full border-4 border-[#000814] timeline-dot"></div>
-                        </div>
-
-                        <div className="w-full md:w-[45%] flex justify-center md:justify-start">
-                            <span className="timeline-year text-white/5 text-[55px] md:text-[80px] lg:text-[100px] font-bold font-mono tracking-tighter select-none leading-none transition-all">
-                                2018/21
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* ======================= ITEM 2: 2022/23 ======================= */}
-                    <div className="relative flex flex-col md:flex-row justify-between items-center mb-48 timeline-item z-10">
-                        <div className="w-full md:w-[45%] flex justify-center md:justify-end order-3 md:order-1">
-                            <span className="timeline-year text-white/5 text-[55px] md:text-[80px] lg:text-[100px] font-bold font-mono tracking-tighter select-none leading-none md:text-right transition-all">
-                                2022/23
-                            </span>
-                        </div>
-
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-6 h-6 flex items-center justify-center order-2">
-                            <div className="w-full h-full bg-white/20 rounded-full border-4 border-[#000814] timeline-dot"></div>
-                        </div>
-
-                        <div className="w-full md:w-[45%] perspective-container order-1 md:order-3 mb-12 md:mb-0">
-                            <div className="rotate-3d-system relative timeline-content text-center md:text-left">
-                                <div className="absolute -inset-8 md:-inset-12 bg-accent/5 blur-2xl rounded-[3rem] opacity-0 timeline-glow-bg pointer-events-none transition-opacity"></div>
-                                <div className="relative z-10">
-                                    <span className="text-neutral-700 font-mono text-xs tracking-widest block mb-4">
-                                        {t('time2_tag')}
-                                    </span>
-                                    <h3 className="text-3xl md:text-4xl font-bold font-sans uppercase mb-6 text-neutral-500 transition-colors">
-                                        {t('time2_title')}
-                                    </h3>
-                                    <p className="text-neutral-600 font-light text-lg leading-relaxed transition-colors">
-                                        {t('time2_desc')}
-                                    </p>
-                                </div>
+                            {/* O Ponto Físico no Centro */}
+                            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-5 h-5 flex items-center justify-center">
+                                {/* REMOVI O transition-all PARA O GSAP COMANDAR */}
+                                <div className="w-full h-full bg-[#000814] rounded-full border-[3px] border-white/20 timeline-dot"></div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* ======================= ITEM 3: 2024/25 ======================= */}
-                    <div className="relative flex flex-col md:flex-row justify-between items-center mb-48 timeline-item z-10">
-                        <div className="w-full md:w-[45%] md:text-right perspective-container mb-12 md:mb-0">
-                            <div className="rotate-3d-system relative timeline-content">
-                                <div className="absolute -inset-8 md:-inset-12 bg-accent/5 blur-2xl rounded-[3rem] opacity-0 timeline-glow-bg pointer-events-none transition-opacity"></div>
-                                <div className="relative z-10">
-                                    <span className="text-neutral-700 font-mono text-xs tracking-widest block mb-4">
-                                        {t('time3_tag')}
-                                    </span>
-                                    <h3 className="text-3xl md:text-4xl font-bold font-sans uppercase mb-6 text-neutral-500 transition-colors">
-                                        {t('time3_title')}
-                                    </h3>
-                                    <p className="text-neutral-600 font-light text-lg leading-relaxed transition-colors">
-                                        {t('time3_desc')}
-                                    </p>
-                                </div>
+                            {/* O Ano Físico (Oposto ao Texto) */}
+                            <div className={`w-full md:w-1/2 flex ${item.side === 'left' ? 'justify-start md:pl-16' : 'justify-end md:pr-16'}`}>
+                                {/* REMOVI O transition-all PARA O GSAP COMANDAR */}
+                                <span className="timeline-year opacity-30 text-white/10 text-[60px] md:text-[90px] lg:text-[120px] font-black font-mono tracking-tighter select-none leading-none">
+                                    {item.year}
+                                </span>
                             </div>
-                        </div>
 
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-6 h-6 flex items-center justify-center">
-                            <div className="w-full h-full bg-white/20 rounded-full border-4 border-[#000814] timeline-dot"></div>
                         </div>
-
-                        <div className="w-full md:w-[45%] flex justify-center md:justify-start">
-                            <span className="timeline-year text-white/5 text-[55px] md:text-[80px] lg:text-[100px] font-bold font-mono tracking-tighter select-none leading-none transition-all">
-                                2024/25
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* ======================= ITEM 4: 2025 ======================= */}
-                    <div className="relative flex flex-col md:flex-row justify-between items-center mb-48 timeline-item z-10">
-                        <div className="w-full md:w-[45%] flex justify-center md:justify-end order-3 md:order-1">
-                            <span className="timeline-year text-white/5 text-[55px] md:text-[80px] lg:text-[100px] font-bold font-mono tracking-tighter select-none leading-none md:text-right transition-all">
-                                2025
-                            </span>
-                        </div>
-
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-6 h-6 flex items-center justify-center order-2">
-                            <div className="w-full h-full bg-white/20 rounded-full border-4 border-[#000814] timeline-dot"></div>
-                        </div>
-
-                        <div className="w-full md:w-[45%] perspective-container order-1 md:order-3 mb-12 md:mb-0">
-                            <div className="rotate-3d-system relative timeline-content text-center md:text-left">
-                                <div className="absolute -inset-8 md:-inset-12 bg-accent/5 blur-2xl rounded-[3rem] opacity-0 timeline-glow-bg pointer-events-none transition-opacity"></div>
-                                <div className="relative z-10">
-                                    <span className="text-neutral-700 font-mono text-xs tracking-widest block mb-4">
-                                        {t('time4_tag')}
-                                    </span>
-                                    <h3 className="text-3xl md:text-4xl font-bold font-sans uppercase mb-6 text-neutral-500 transition-colors">
-                                        {t('time4_title')}
-                                    </h3>
-                                    <p className="text-neutral-600 font-light text-lg leading-relaxed transition-colors">
-                                        {t('time4_desc')}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* ======================= ITEM 5: 2026 ======================= */}
-                    <div className="relative flex flex-col md:flex-row justify-between items-center timeline-item z-10">
-                        <div className="w-full md:w-[45%] md:text-right perspective-container mb-12 md:mb-0">
-                            <div className="rotate-3d-system relative timeline-content">
-                                <div className="absolute -inset-8 md:-inset-12 bg-accent/5 blur-2xl rounded-[3rem] opacity-0 timeline-glow-bg pointer-events-none transition-opacity"></div>
-                                <div className="relative z-10">
-                                    <span className="text-accent font-mono text-xs tracking-widest block mb-4">
-                                        {t('time5_tag')}
-                                    </span>
-                                    <h3 className="text-3xl md:text-4xl font-bold font-sans uppercase mb-6 text-neutral-500 transition-colors">
-                                        {t('time5_title')}
-                                    </h3>
-                                    <p className="text-neutral-600 font-light text-lg leading-relaxed transition-colors">
-                                        {t('time5_desc')}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-6 h-6 flex items-center justify-center">
-                            <div className="w-full h-full bg-white/20 rounded-full border-4 border-[#000814] timeline-dot"></div>
-                        </div>
-
-                        <div className="w-full md:w-[45%] flex justify-center md:justify-start">
-                            <span className="timeline-year text-white/5 text-[55px] md:text-[80px] lg:text-[100px] font-bold font-mono tracking-tighter select-none leading-none transition-all">
-                                2026
-                            </span>
-                        </div>
-                    </div>
-
+                    ))}
                 </div>
             </div>
         </section>

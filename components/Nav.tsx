@@ -36,8 +36,8 @@ export default function Nav() {
         return;
       }
       if (lenis) {
-        lenis.scrollTo(target, { 
-          duration: 1.5, 
+        lenis.scrollTo(target, {
+          duration: 1.5,
           offset: offset,
           onComplete: () => {
             if (target === '#magnetic-area') {
